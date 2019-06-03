@@ -10,7 +10,8 @@
         "vlucas/phpdotenv": "~2.2",
         "zendframework/zend-soap": "^2.8",
         "zendframework/zend-config": "^3.2",
-        "thedevsaddam/lumen-route-list": "^2.0"
+        "thedevsaddam/lumen-route-list": "^2.0",
+        "irazasyed/larasupport": "~1.0"
     },
     "require-dev": {
         "fzaninotto/faker": "~1.4",

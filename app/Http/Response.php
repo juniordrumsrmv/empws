@@ -16,26 +16,31 @@ use Zend\Soap\Wsdl;
 
 class Response
 {
+    /**
+     * Funcao para criacao de retorno
+    */
     public function make($content = '', $status = 200, array $headers = [])
     {
         /** @var Request $request */
         $request = app('request');
 
         $acceptHeader = $request->header('accept');
-        print_r($acceptHeader);
         $result = "";
         switch ($acceptHeader) {
             case 'application/json':
                 $result = $this->json($content, $status, $headers);
                 break;
             default:
-                $result = $this->getXML($content);
+                $result = responseSoapXml($content, $status);
                 break;
         }
 
         return $result;
     }
 
+    /**
+     * Funcao para criacao de xml zend-config
+     */
     protected function getXML($data)
     {
         if ( $data instanceof Arrayable ) {

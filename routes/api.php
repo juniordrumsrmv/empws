@@ -17,7 +17,7 @@ $router->get('/version', function () use ($router) {
 
 //Rota do nosso SOAP Server - direcionando para o controlador de acoes
 $router->get('/emp-soap.wsdl', 'Server\SoapServerController@autoDiscover');
-$router->post('/server', 'Server\SoapServerController@mountServer');
+$router->post('/server', 'Server\SoapServerController@Server');
 
 //Chamada de teste
 $uri = 'http://localhost:98';
@@ -26,13 +26,9 @@ $router->get('emp-test-ticket', function () use($uri) {
         'cache_wsdl' => WSDL_CACHE_NONE
     ]);
 
-    return $client->getTicketStoreDate([
-        'store' => '123',
-        'date' => '123',
-        'cashier' => '123',
-        'ticket' => '123'
+    return $client->consultarTotalLoja([
+        'company' => 'CAMICADO-BR',
+        'store' => "900",
+        'date' => '2019-05-16'
     ]);
 });
-
-
-$router->get('/teste', 'Downloads\TicketsController@getTicket');
