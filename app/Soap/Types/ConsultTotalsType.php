@@ -9,7 +9,7 @@
 namespace App\Soap\Types;
 
 
-class TicketType
+class ConsultTotalsType
 {
     /**
      * @var string

@@ -30,3 +30,18 @@ function responseSoapXml($content = '', $type = 0, $error = '')
 
     return $factory->soapXMLCreate($content, $type, $error);
 }
+
+/**
+ * Funcao para montagem de retorno ERRO
+ */
+function responseStatus($type, $code = 0, $data = NULL)
+{
+    /** @var \App\Http\Response $factory*/
+    $factory = new \App\Soap\Responses\ResponsesDefine();
+
+    if ( func_num_args() === 0 ){
+        return $factory;
+    }
+
+    return $factory->make($type, $code, $data);
+}

@@ -8,9 +8,7 @@
 
 namespace App\Http\Controllers\Server;
 
-
-use App\Http\Controllers\Downloads\TicketsController;
-use Illuminate\Support\Facades\Log;
+use App\Http\Controllers\Downloads\ConsultTotalsController;
 
 class SoapServerController
 {
@@ -23,19 +21,12 @@ class SoapServerController
         $autoDiscover = new \Zend\Soap\AutoDiscover();
         $autoDiscover->setUri($this->generateUri()."/server");
         $autoDiscover->setServiceName('EMPSOAP');
-        $autoDiscover->setClass(TicketsController::class);
-//        $autoDiscover->setBindingStyle(['style' => 'document']);
+        $autoDiscover->setClass(ConsultTotalsController::class);
         $autoDiscover->setOperationBodyStyle(['use' => 'literal']);
         $autoDiscover->handle();
     }
 
     public function Server() {
-//        $server = new \Zend\Soap\Server($this->generateUri()."/emp-soap.wsdl", [
-//            'cache_wsdl'     => WSDL_CACHE_NONE,
-//            'soap_version'   => SOAP_1_2,
-//            'trace'          => true,
-//            'exceptions'     => true
-//        ]);
         $server = new \Zend\Soap\Server();
         $server->setWSDL($this->generateUri()."/emp-soap.wsdl");
         $server->setOptions(
@@ -48,18 +39,18 @@ class SoapServerController
         );
         $server->setUri($this->generateUri()."/server");
         $call = $server
-            ->setClass(TicketsController::class)
+            ->setClass(ConsultTotalsController::class)
             ->handle();
 
         //Sempre Logar a ultima requisicao
         $lastRequest = $server->getLastRequest();
         /** @var Illuminate\Support\Facades\Log Log*/
-        Log::info($lastRequest);
+        \Log::info($lastRequest);
 
         //Sempre Logar a ultima resposta
         $lastResponse = $server->getResponse();
         /** @var Illuminate\Support\Facades\Log Log*/
-        Log::info($lastResponse);
+        \Log::info($lastResponse);
 
         // Deal with a thrown exception that was converted into a SoapFault.
         // SoapFault thrown directly in a service class bypasses this code.
@@ -68,12 +59,9 @@ class SoapServerController
             echo self::serverFault($call);
 
         } else {
-
             echo $call;
 
         }
-
-        return $call;
     }
 
     /**
@@ -84,7 +72,7 @@ class SoapServerController
      */
     public static function serverFault(\Exception $exception)
     {
-        Log::info($exception->getTraceAsString());
+        \Log::info($exception->getTraceAsString());
         $faultcode = 'SOAP-ENV:Server';
         $faultstring = $exception->getMessage();
         return view('responses.fault', compact('faultcode', 'faultstring'));
