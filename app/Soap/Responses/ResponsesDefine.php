@@ -100,6 +100,10 @@ class ResponsesDefine
                         $msg->message = "O campo $data deve ser númerico";
                         $msg->detail = "Campo informado deve ser conter apenas números";
                         break;
+                    case 4:
+                        $msg->message = "Campo $data com formato inválido";
+                        $msg->detail = "Campo deve conter o formato correto";
+                        break;
                 }
                 break;
             case self::S_TYPE:

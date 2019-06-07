@@ -12,14 +12,13 @@ namespace App\Soap\Types;
 class ConsultTotalsType
 {
     /**
-     * @var string
-     * @required
+     * @description ADADADADA
+     * @var string $company
      */
     public $company;
 
     /**
      * @var string
-     * @required
      */
     public $store;
 

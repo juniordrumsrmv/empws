@@ -38,6 +38,10 @@ class ConsultTotalsValidation
         $this->msg = $validate->message;
         $this->detail = $validate->detail;
 
+        \Log::info("STATUS :".$this->status);
+        \Log::info("CODE :".$this->code);
+        \Log::info("MSG :".$this->msg);
+        \Log::info("DET :".$this->detail);
     }
 
     public function validate( $params, $function )
@@ -53,25 +57,38 @@ class ConsultTotalsValidation
             $error = 0;
             switch ($function) {
                 case 'consultarTotalLoja':
+
                     //Validar loja
                     if ( !empty($params['store']) ){
-                        \Log::info("STORE :".$params['store']);
                         if ( !is_numeric($params['store']) ) {
-                            \Log::info("STORE :".$params['store']);
                             $error = 1;
-                            $res = responseStatus('P', 3);
+                            $res = responseStatus('P', 3, 'store');
                         }
                     }
                     else {
                         $error = 1;
-                        $res = responseStatus('P', 2);
+                        $res = responseStatus('P', 2, 'store');
                     }
+
+                    //Validar data
+                    if ( !empty($params['date']) ){
+                        if ( !validateDate($params['date']) ) {
+                            $error = 1;
+                            $res = responseStatus('P', 4, 'date');
+                        }
+                    }
+                    else {
+                        $error = 1;
+                        $res = responseStatus('P', 2, 'date');
+                    }
+
                     break;
             }
 
         }
 
-        if ( $response->status == 2 ) {
+        if ( $res->status == 2 ) {
+            $response->status = $res->status;
             $response->code = $res->code;
             $response->message = $res->message->message;
             $response->detail = $res->message->detail;

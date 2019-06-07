@@ -22,7 +22,7 @@ class ConsultTotalsController
 {
 
     /**
-     * Busca de totais por loja/data/operacao(media)
+     * Busca de totais por loja/data/operacao(finalizadora)
      *
      * @param \App\Soap\Types\ConsultTotalsType $params
      * @return object
