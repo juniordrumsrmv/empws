@@ -22,8 +22,9 @@ $router->post('/server', 'Server\SoapServerController@Server');
 //Chamada de teste
 $uri = 'http://localhost:98';
 $router->get('emp-test-ticket', function () use($uri) {
-    $client = new \Zend\Soap\Client("$uri/emp-soap.wsdl", [
-        'cache_wsdl' => WSDL_CACHE_NONE
+    $client = new  SoapClient("$uri/emp-soap.wsdl", [
+        'exceptions'     => true,
+        'cache_wsdl'     => WSDL_CACHE_NONE
     ]);
 
     return $client->consultarTotalLoja([

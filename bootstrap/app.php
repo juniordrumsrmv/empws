@@ -78,7 +78,7 @@ $app->singleton(
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Thedevsaddam\LumenRouteList\LumenRouteListServiceProvider::class);
@@ -107,6 +107,22 @@ $app->router->group([
 ], function ($router) {
     require __DIR__.'/../routes/web.php';
     require __DIR__.'/../routes/api.php';
+});
+
+
+/*
+|--------------------------------------------------------------------------
+| Configure customization log file
+|--------------------------------------------------------------------------
+|
+*/
+$logPath = env('LOG_FILE');
+$app->configureMonologUsing(function(Monolog\Logger $monolog) use($logPath){
+
+    $handler = (new \Monolog\Handler\StreamHandler($logPath))
+        ->setFormatter(new \Monolog\Formatter\LineFormatter("[%datetime%] empws.%level_name%: %message% %context% %extra%\n", null, true, true));
+
+    return $monolog->pushHandler($handler);
 });
 
 return $app;

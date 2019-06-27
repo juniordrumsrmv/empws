@@ -27,6 +27,8 @@ class SoapServerController
     }
 
     public function Server() {
+        LogMsg('----------- begin', 9);
+
         $server = new \Zend\Soap\Server();
         $server->setWSDL($this->generateUri()."/emp-soap.wsdl");
         $server->setOptions(
@@ -45,36 +47,13 @@ class SoapServerController
         //Sempre Logar a ultima requisicao
         $lastRequest = $server->getLastRequest();
         /** @var Illuminate\Support\Facades\Log Log*/
-        \Log::info($lastRequest);
+        LogMsg("REQUISIÇÃO: [$lastRequest]");
 
         //Sempre Logar a ultima resposta
         $lastResponse = $server->getResponse();
         /** @var Illuminate\Support\Facades\Log Log*/
-        \Log::info($lastResponse);
+        LogMsg("RESPOSTA: [$lastResponse]");
 
-        // Deal with a thrown exception that was converted into a SoapFault.
-        // SoapFault thrown directly in a service class bypasses this code.
-        if ($call instanceof SoapFault) {
-
-            echo self::serverFault($call);
-
-        } else {
-            echo $call;
-
-        }
-    }
-
-    /**
-     * Return error response and log stack trace.
-     *
-     * @param \Exception $exception
-     * @return Factory|View
-     */
-    public static function serverFault(\Exception $exception)
-    {
-        \Log::info($exception->getTraceAsString());
-        $faultcode = 'SOAP-ENV:Server';
-        $faultstring = $exception->getMessage();
-        return view('responses.fault', compact('faultcode', 'faultstring'));
+        LogMsg('----------- end', 9);
     }
 }

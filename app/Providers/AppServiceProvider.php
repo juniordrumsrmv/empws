@@ -2,10 +2,25 @@
 
 namespace App\Providers;
 
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
 {
+    /**
+     * Bootstrap any application services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        if(env('APP_DEBUG')) {
+            DB::listen(function($query) {
+                LogMsg("SQL: [". $query->sql . ' [' . implode(', ', $query->bindings) . '] ]');
+            });
+        }
+    }
+
     /**
      * Register any application services.
      *

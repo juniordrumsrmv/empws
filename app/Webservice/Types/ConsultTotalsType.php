@@ -6,14 +6,13 @@
  * Time: 14:45
  */
 
-namespace App\Soap\Types;
+namespace App\Webservice\Types;
 
 
 class ConsultTotalsType
 {
     /**
-     * @description ADADADADA
-     * @var string $company
+     * @var string
      */
     public $company;
 
@@ -38,7 +37,8 @@ class ConsultTotalsType
     public $ticket;
 
     /**
-     * @var string
+     * @var int
      */
-    public $type;
+    public $operation;
+
 }

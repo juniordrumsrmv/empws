@@ -6,7 +6,7 @@
  * Time: 16:26
  */
 
-namespace App\Soap\Responses;
+namespace App\Webservice\Responses;
 
 
 class ResponsesDefine
@@ -60,7 +60,9 @@ class ResponsesDefine
         $response = new \stdClass();
         $response->status = self::E_STATUS;
         $response->code = $this->getCode($type, $code);
-        $response->message = $this->getMessage($type, $code, $data);
+        $msg = $this->getMessage($type, $code, $data);
+        $response->message = $msg->message;
+        $response->detail = $msg->detail;
 
         return $response;
     }
@@ -84,6 +86,14 @@ class ResponsesDefine
                         $msg->message = "Falha técnica";
                         $msg->detail = "Falha técnica";
                         break;
+                    case 2:
+                        $msg->message = "Não há dados para consulta";
+                        $msg->detail = "Não há dados para consulta com parâmetros informados";
+                        break;
+
+                    case 99: //Mensagem customizada
+                        $msg->message = $data;
+                        break;
                 }
                 break;
             case self::P_TYPE:
@@ -104,6 +114,10 @@ class ResponsesDefine
                         $msg->message = "Campo $data com formato inválido";
                         $msg->detail = "Campo deve conter o formato correto";
                         break;
+
+                    case 99: //Mensagem customizada
+                        $msg->message = $data;
+                        break;
                 }
                 break;
             case self::S_TYPE:
@@ -114,15 +128,35 @@ class ResponsesDefine
                     case 1:
                         $msg = "Inclusão realizada com sucesso";
                         break;
+                    case 2:
+                        $msg = "Alteração realizada com sucesso";
+                        break;
+                    case 3:
+                        $msg = "Exclusão realizada com sucesso";
+                        break;
+
+                    case 99: //Mensagem customizada
+                        $msg->message = $data;
+                        break;
                 }
                 break;
             case self::N_TYPE:
                 switch ($code) {
                     case 0:
-                        $msg = "Parametros não configurados";
+                        $msg->message = "Parametros não configurados";
+                        $msg->detail = "Parametros não configurados";
                         break;
                     case 1:
-                        $msg = "O valor do campo $data não é válido";
+                        $msg->message = "O valor do campo $data não é válido";
+                        $msg->detail = "Campo informado não condiz com formato esperado";
+                        break;
+                    case 2:
+                        $msg->message = "O operador informado não está cadastrado [$data]";
+                        $msg->detail = "O operador informado não está cadastrado na base";
+                        break;
+
+                    case 99: //Mensagem customizada
+                        $msg->message = $data;
                         break;
                 }
                 break;

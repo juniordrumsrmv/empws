@@ -21,7 +21,8 @@
     "autoload": {
         "files": [
             "app/Helpers/Response.php",
-            "app/Helpers/Validations.php"
+            "app/Helpers/Validations.php",
+            "app/Helpers/Emporium.php"
         ],
         "psr-4": {
             "App\\": "app/"

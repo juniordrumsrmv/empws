@@ -1,4 +1,6 @@
-<?php namespace App\Model\Model;
+<?php
+
+namespace App\Model;
 
 /**
  * Eloquent class to describe the agent table

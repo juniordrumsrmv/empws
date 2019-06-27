@@ -10,11 +10,11 @@ namespace App\Http;
 
 
 use Illuminate\Contracts\Support\Arrayable;
+use Laravel\Lumen\Http\ResponseFactory;
 use Zend\Config\Config;
 use Zend\Config\Writer\Xml;
-use Zend\Soap\Wsdl;
 
-class Response
+class Response extends ResponseFactory
 {
     /**
      * Funcao para criacao de retorno
@@ -28,15 +28,19 @@ class Response
         $result = "";
         switch ($acceptHeader) {
             case 'application/json':
-                $result = $this->json($content, $status, $headers);
+                $result = json_encode($content, JSON_UNESCAPED_UNICODE);
                 break;
             default:
-                $result = responseSoapXml($content, $status);
+                if ( env('RESPONSE_TYPE') == 'soap')
+                    $result = $this->getSOAP($content);
+                else
+                    $result = $this->getXML((array) $content);
                 break;
         }
 
         return $result;
     }
+
 
     /**
      * Funcao para criacao de xml zend-config
@@ -50,5 +54,20 @@ class Response
         $xmlWriter = new Xml();
 
         return $xmlWriter->toString($config);
+    }
+
+    /**
+     * Funcao para tratamento de retorno SOAP
+     */
+    protected function getSOAP($data)
+    {
+        //Validando erro
+        if ( is_array($data) ) {
+            if ($data['status'] == 2) { //Erro
+                return new \SoapFault($data['code'], $data['message'], null, $data['detail'], 'FaultSpecified');
+            }
+        }
+
+        return $data;
     }
 }
